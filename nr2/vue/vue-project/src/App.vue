@@ -1,27 +1,32 @@
 <script setup>
-
 import {ref, onMounted } from 'vue'
-import axios from 'axios';
-import { template } from 'document/lib/lang';
 
-const testData = ref([]);
 
-function get_test_data() {
-  axios.get('/test')
-  .then(response => {
-    testData.value = response.testData
-  })
-  .catch(error => {
-    console.error('There was an error fetching the data:', error)
-  })
+setup() {
+  const testData = ref([]);
+
+
+  function get_test_data() {
+    try{
+      const response = await fetch('http://10.0.0.156:80/test')
+      const data = await response.json()
+      testData.value = data.test
+
+    } catch(error) {
+      console.error('There was an error fetching the data:', error)
+    }
+  }
+
+  onMounted(get_test_data) 
+
+  return {
+    testData,
+    get_test_data
+  }
+
 
 }
 
-onMounted(get_test_data) 
-
-return {
-  testData
-}
 
 
 </script>
